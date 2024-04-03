@@ -1,0 +1,17 @@
+function touchstart() {
+    console.log("touchstart");
+}
+
+function touchmove() {
+    console.log("touchmove");
+}
+
+function touchend() {
+    console.log("touchend")
+}
+
+module.exports = {
+    touchstart: touchstart,
+    touchmove: touchmove,
+    touchend: touchend
+}

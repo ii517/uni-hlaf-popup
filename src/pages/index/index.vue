@@ -2,14 +2,16 @@
   <view class="content">
     <image class="logo" src="/static/logo.png" />
     <view class="text-area">
-      <text class="title">{{ title }}</text>
+      <button class="title">{{ title }}</button>
     </view>
+
+      <half-popup></half-popup>
   </view>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-const title = ref('Hello')
+const title = ref('Hello1')
 </script>
 
 <style>
