@@ -2,24 +2,38 @@
   <view class="content">
     <image class="logo" src="/static/logo.png" />
     <view class="text-area">
-      <button class="title">{{ title }}</button>
+      <button class="title" @click="show = !show">{{ show }}</button>
     </view>
 
-      <half-popup></half-popup>
+      <half-popup v-model="show">
+          <scroll-view
+              :scroll-y="true"
+              style="height: 980rpx"
+          >
+              <view v-for="item in 40">
+                  你好呀
+              </view>
+          </scroll-view>
+      </half-popup>
   </view>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 const title = ref('Hello1')
+const show = ref(false)
 </script>
 
 <style>
+page {
+    background: #f5f5f5;
+}
 .content {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
 }
 
 .logo {

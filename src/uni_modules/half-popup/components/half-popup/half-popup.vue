@@ -1,27 +1,63 @@
 <!-- #ifdef APP-VUE || MP-WEIXIN || MP-QQ || H5 -->
-<script src="./use-touch.wxs" module="touchWxs" lang="wxs"></script>
+<script src="./use-touch.wxs" module="wxs" lang="wxs"></script>
 <!-- #endif -->
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import type { CSSProperties } from 'vue'
-import { halfPopupProps, halfPopupEmits } from './half-popup'
+import { halfPopupEmits, halfPopupProps } from './half-popup'
+import { usePopup } from './composables/use-popup'
 
-const props = defineProps(halfPopupProps());
-const emits = defineEmits(halfPopupEmits());
+const props = defineProps(halfPopupProps);
+const emits = defineEmits(halfPopupEmits);
 
-console.log(props)
+const {
+    showPopup,
+    visiblePopup,
+    wxsPropsType,
+    onClickClose
+} = usePopup(props, emits)
 
-const hello = ref('Hello world!')
+
+defineExpose({ onClickClose })
 </script>
+
+
 
 <template>
     <view
-        class="half-popup-container"
-        @touchstart="touchWxs.touchstart"
-        @touchmove="touchWxs.touchmove"
-        @touchend="touchWxs.touchend"
-        @touchcancel="touchWxs.touchend"
+        class="half-popup"
+        v-if="showPopup"
+        ref="halfPopupRef"
+        @tap.stop="onClickClose"
     >
-        {{ hello }}
+        <!-- 弹出内容 -->
+        <view
+            :class="['half-popup__container']"
+            :change:prop="wxs.observePropChanges"
+            :prop="wxsPropsType"
+            :data-popup="showPopup"
+            @tap.stop
+            @onClickClose="onClickClose"
+            @touchstart="wxs.handleTouchstart"
+            @touchmove="wxs.handleTouchmove"
+            @touchend="wxs.handleTouchend"
+            @touchcancel="wxs.handleTouchend"
+        >
+            <view>
+                {{ visiblePopup }}
+            </view>
+            <slot></slot>
+
+            <!-- 关闭按钮 -->
+            <view
+                v-if="closeBtn"
+                class="close-btn"
+                @tap.stop="onClickClose"
+            >
+                <text class="close-btn__icon" />
+            </view>
+        </view>
     </view>
 </template>
+
+<style lang="scss">
+@import 'half-popup.scss';
+</style>

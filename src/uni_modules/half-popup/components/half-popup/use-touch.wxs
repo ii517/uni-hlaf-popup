@@ -1,17 +1,112 @@
-function touchstart() {
-    console.log("touchstart");
+// 设置初始变量
+var initialTouchPositionY = -1;
+var lastTouchPositionY = -1;
+var touchStartTimestamp = 0;
+var animationDuration = -1; // 动画完成时间，拿的是props传入的
+var criticalVelocity = 0.8; // 一个临界滑动速度，如果超过这个值则表示需要关闭窗口
+var criticalDistance = 350; // 一个临界滑动距离，如果超过这个值则表示需要关闭窗口
+
+// 用于监控属性变化的函数
+function observePropChanges(newVal, oldVal, ownerInstance, currentInstance) {
+    var state = ownerInstance.getState() || {};
+    state.currentInstance = currentInstance;
+
+    if (newVal) {
+        var data = JSON.parse(newVal);
+        animationDuration = data.duration;
+        var transition = 'transform ' + animationDuration + 'ms ease-in-out';
+        applyTransformation(data.modelValue ? 'translateY(0px)' : 'translateY(100%)', currentInstance, true, transition);
+    }
 }
 
-function touchmove() {
-    console.log("touchmove");
+// 处理touchstart事件的函数
+function handleTouchstart(e, ownerInstance) {
+    var touch = extractTouchFromEvent(e);
+    initialTouchPositionY = touch.clientY;
+    lastTouchPositionY = initialTouchPositionY;
+    touchStartTimestamp = e.timeStamp || Date.now();
 }
 
-function touchend() {
-    console.log("touchend")
+// 处理touchmove事件的函数
+function handleTouchmove(e, ownerInstance) {
+    if (e.preventDefault) {
+        e.preventDefault();
+    }
+    var currentInstance = getInstance(ownerInstance);
+    var touch = extractTouchFromEvent(e);
+    var distance = touch.clientY - initialTouchPositionY;
+
+    if (distance < 0) {
+        distance = 0;
+    }
+    applyTransformation('translateY(' + distance + 'px)', currentInstance, false, '');
+}
+
+// 处理touchend事件的函数
+function handleTouchend(e, ownerInstance) {
+    var endTime = e.timeStamp || Date.now();
+    var currentInstance = getInstance(ownerInstance);
+    var touch = extractTouchFromEvent(e);
+    var endY = touch.clientY;
+    var distance = endY - initialTouchPositionY;
+
+    // 计算滑动速度
+    var velocity = (endY - lastTouchPositionY) / (endTime - touchStartTimestamp);
+    var shouldClose = distance > criticalDistance / 2 || velocity > criticalVelocity;
+
+    if (shouldClose) {
+        var viewStyle = currentInstance.getComputedStyle(['transform'])
+        // 这里的作用是防止在内部有元素有滚动条时滑动导致关掉弹窗
+        if (viewStyle.transform === 'none') {
+            return
+        }
+        // 滑动超过一半屏幕高度或速度较快，则关闭窗口
+        applyTransformation('translateY(100%)', currentInstance, true, 'transform ' + animationDuration + 'ms ease-in-out');
+        // 重置状态
+        initialTouchPositionY = -1;
+        animationDuration = -1;
+        // 通知外部调用关闭
+        if (currentInstance['$vm']) {
+            // 因为在vue3 setup的h5中不能使用ownerInstance.callMethod去调用外部函数，所以使用这个狗方法
+            currentInstance['$vm']['$']['attrs']['onOnClickClose']();
+        } else {
+            ownerInstance.callMethod('onClickClose');
+        }
+    } else {
+        // 如果没有超过，则复原窗口
+        applyTransformation('translateY(0px)', currentInstance, true, 'transform ' + animationDuration + 'ms ease-in-out');
+    }
+}
+
+// 应用变形函数
+function applyTransformation(transform, currentInstance, animate, transition) {
+    currentInstance.requestAnimationFrame(function() {
+        var stl = transform === 'translateY(0px)' ? { transform: 'none' } : { transform: transform };
+        if (animate) {
+            stl.transition = transition || 'transform .1s linear';
+        }
+        currentInstance.setStyle(stl);
+    });
+}
+
+// 获取当前实例的函数
+function getInstance(ownerInstance) {
+    var currentInstance = ownerInstance.getState().currentInstance;
+    if (!currentInstance) {
+        ownerInstance.callMethod('handlePropUpdate');
+        currentInstance = ownerInstance.getState().currentInstance;
+    }
+    return currentInstance
+}
+
+// 提取触摸事件中的触摸对象
+function extractTouchFromEvent(e) {
+    return e.changedTouches ? e.changedTouches[0] : e.touches[0];
 }
 
 module.exports = {
-    touchstart: touchstart,
-    touchmove: touchmove,
-    touchend: touchend
-}
+    handleTouchstart: handleTouchstart,
+    handleTouchmove: handleTouchmove,
+    handleTouchend: handleTouchend,
+    observePropChanges: observePropChanges
+}; 
