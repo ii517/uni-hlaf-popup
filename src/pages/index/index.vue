@@ -8,10 +8,10 @@
       <half-popup v-model="show">
           <scroll-view
               :scroll-y="true"
-              style="height: 980rpx"
+              style="height: 100%"
           >
-              <view v-for="item in 40">
-                  你好呀
+              <view style="padding: 20rpx" v-for="item in 60">
+                  你好呀 {{item }}
               </view>
           </scroll-view>
       </half-popup>

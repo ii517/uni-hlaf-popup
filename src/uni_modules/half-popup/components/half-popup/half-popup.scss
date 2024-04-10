@@ -12,29 +12,47 @@
     top: 0;
     right: 0;
     bottom: 0;
+    z-index: 999;
     overflow: hidden;
 
     &__container {
+        box-sizing: border-box;
         position: absolute;
         left: 0;
         bottom: 0;
         width: 100%;
-        height: 980rpx;
-        transform-origin: bottom center;
+        height: var(--height);
+        border-top-left-radius: var(--radius);
+        border-top-right-radius: var(--radius);
+        overflow: hidden;
         background: #ffffff;
-        border-radius: 16rpx 0;
+        transform-origin: bottom center;
         transform: translateY(100%);
         @extend .half-safe-area-bottom;
 
-        .close-btn {
+        .btn {
             position: absolute;
-            right: 0;
-            top: 0;
             padding: 18rpx;
             font-size: 34rpx;
             line-height: 1;
             color: red;
-            &__icon {
+        }
+        .fullscreen-btn {
+            right: 70rpx;
+            top: 0;
+            .fullscreen-icon1 {
+                @extend .half-iconfont;
+                @extend .icon-fangda1;
+            }
+            .fullscreen-icon2 {
+                @extend .half-iconfont;
+                @extend .icon-suoxiao;
+            }
+        }
+        .close-btn {
+            right: 0;
+            top: 0;
+            .close-icon {
                 @extend .half-iconfont;
                 @extend .icon-guanbi;
             }

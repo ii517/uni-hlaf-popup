@@ -14,8 +14,8 @@ function observePropChanges(newVal, oldVal, ownerInstance, currentInstance) {
     if (newVal) {
         var data = JSON.parse(newVal);
         animationDuration = data.duration;
-        var transition = 'transform ' + animationDuration + 'ms ease-in-out';
-        applyTransformation(data.modelValue ? 'translateY(0px)' : 'translateY(100%)', currentInstance, true, transition);
+        var transition = 'all ' + animationDuration + 'ms ease-in-out';
+        applyTransformation(data.modelValue ? 'translate3d(0,0px,0)' : 'translate3d(0,100%,0)', currentInstance, true, transition);
     }
 }
 
@@ -36,10 +36,8 @@ function handleTouchmove(e, ownerInstance) {
     var touch = extractTouchFromEvent(e);
     var distance = touch.clientY - initialTouchPositionY;
 
-    if (distance < 0) {
-        distance = 0;
-    }
-    applyTransformation('translateY(' + distance + 'px)', currentInstance, false, '');
+    distance = Math.max(distance, 0); // 防止负数距离
+    applyTransformation('translate3d(0,' + distance + 'px, 0)', currentInstance, false, '');
 }
 
 // 处理touchend事件的函数
@@ -61,42 +59,43 @@ function handleTouchend(e, ownerInstance) {
             return
         }
         // 滑动超过一半屏幕高度或速度较快，则关闭窗口
-        applyTransformation('translateY(100%)', currentInstance, true, 'transform ' + animationDuration + 'ms ease-in-out');
+        applyTransformation('translate3d(0,100%,0)', currentInstance, true, 'all ' + animationDuration + 'ms ease-in-out');
         // 重置状态
         initialTouchPositionY = -1;
         animationDuration = -1;
         // 通知外部调用关闭
         if (currentInstance['$vm']) {
-            // 因为在vue3 setup的h5中不能使用ownerInstance.callMethod去调用外部函数，所以使用这个狗方法
+            // 因为在vue3 setup的h5中不能使用ownerInstance.callMethod去调用外部函数，所以使用这种*方法
             currentInstance['$vm']['$']['attrs']['onOnClickClose']();
         } else {
             ownerInstance.callMethod('onClickClose');
         }
     } else {
         // 如果没有超过，则复原窗口
-        applyTransformation('translateY(0px)', currentInstance, true, 'transform ' + animationDuration + 'ms ease-in-out');
+        applyTransformation('translate3d(0,0px,0)', currentInstance, true, 'all ' + animationDuration + 'ms ease-in-out');
     }
 }
 
 // 应用变形函数
 function applyTransformation(transform, currentInstance, animate, transition) {
     currentInstance.requestAnimationFrame(function() {
-        var stl = transform === 'translateY(0px)' ? { transform: 'none' } : { transform: transform };
+        var stl = transform !== 'translate3d(0,0px,0)' ? { transform: transform } : { transform: 'none' };
         if (animate) {
             stl.transition = transition || 'transform .1s linear';
+        } else {
+            stl.transition = 'none'
         }
-        currentInstance.setStyle(stl);
+        currentInstance.setStyle(stl)
     });
 }
 
 // 获取当前实例的函数
 function getInstance(ownerInstance) {
-    var currentInstance = ownerInstance.getState().currentInstance;
-    if (!currentInstance) {
-        ownerInstance.callMethod('handlePropUpdate');
-        currentInstance = ownerInstance.getState().currentInstance;
-    }
-    return currentInstance
+    // if (!currentInstance) {
+        // ownerInstance.callMethod('onClickClose');
+        // currentInstance = ownerInstance.getState().currentInstance;
+    // }
+    return ownerInstance.getState().currentInstance
 }
 
 // 提取触摸事件中的触摸对象

@@ -9,11 +9,11 @@ export const halfPopupProps = {
     /**
      * @description 弹框高度
      */
-    height: makeNumericProp(0),
+    height: makeNumericProp(980),
     /**
      * @description 弹框的内容的圆角
      */
-    radius: makeNumericProp(0),
+    radius: makeNumericProp(20),
     /**
      * @description 弹框的内容的圆角
      */
