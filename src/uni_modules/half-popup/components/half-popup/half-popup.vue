@@ -15,24 +15,30 @@ const {
     isFullScreen,
     popupHeight,
     onClickClose,
-    onFullScreen
+    onFullScreen,
+    onOverlayClose
 } = usePopup(props, emits)
 
 defineExpose({ onClickClose })
+defineOptions({ name: 'HalfPopup' })
 </script>
 
 <template>
     <view
         v-if="visiblePopup"
         class="half-popup"
-        @tap.stop="onClickClose"
+        :style="{
+            '--zIndex': props.zIndex
+        }"
+        @close="onClickClose"
+        @tap.stop="onOverlayClose"
     >
         <!-- 弹出内容 -->
         <view
             :class="['half-popup__container']"
             :style="{
                 '--height': `${convertUnit(popupHeight)}`,
-                '--radius': `${convertUnit(radius)}`
+                '--radius': `${convertUnit(props.radius)}`
             }"
             :change:prop="wxs.observePropChanges"
             :prop="wxsPropsType"
@@ -42,8 +48,8 @@ defineExpose({ onClickClose })
             :catchtouchmove="wxs.handleTouchmove"
             <!-- #endif -->
             <!-- #ifndef MP-WEIXIN -->
-            @touchmove="wxs.handleTouchmove"
             @onClickClose="onClickClose"
+            @touchmove="wxs.handleTouchmove"
             <!-- #endif -->
             @touchend="wxs.handleTouchend"
             @touchcancel="wxs.handleTouchend"
@@ -52,19 +58,19 @@ defineExpose({ onClickClose })
 
             <!-- 放大-充满屏幕 -->
             <view
-                v-if="fullScreen"
-                class="btn fullscreen-btn"
+                v-if="props.fullScreen"
+                class="half-popup-btn half-popup-fullscreen-btn"
                 @tap.stop="onFullScreen"
             >
-                <text :class="isFullScreen ? 'fullscreen-icon2' : 'fullscreen-icon1'" />
+                <text :class="isFullScreen ? '__fullscreen-icon2' : '__fullscreen-icon1'" />
             </view>
             <!-- 关闭按钮 -->
             <view
-                v-if="closeBtn"
-                class="btn close-btn"
+                v-if="props.closeBtn"
+                class="half-popup-btn half-popup-close-btn"
                 @tap.stop="onClickClose"
             >
-                <text class="close-icon" />
+                <text class="__close-icon" />
             </view>
         </view>
     </view>

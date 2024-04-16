@@ -5,7 +5,7 @@
       <button class="title" @click="show = !show">{{ show }}</button>
     </view>
 
-      <half-popup v-model="show">
+      <half-popup v-model="show" @close="close">
           <scroll-view
               :scroll-y="true"
               style="height: 100%"
@@ -21,7 +21,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 const title = ref('Hello1')
-const show = ref(false)
+const show = ref(true)
+
+const close = () => {
+  console.log('关闭了')
+}
 </script>
 
 <style>

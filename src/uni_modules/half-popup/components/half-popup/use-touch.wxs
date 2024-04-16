@@ -54,6 +54,7 @@ function handleTouchend(e, ownerInstance) {
 
     if (shouldClose) {
         var viewStyle = currentInstance.getComputedStyle(['transform'])
+
         // 这里的作用是防止在内部有元素有滚动条时滑动导致关掉弹窗
         if (viewStyle.transform === 'none') {
             return

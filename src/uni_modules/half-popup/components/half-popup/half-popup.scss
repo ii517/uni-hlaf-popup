@@ -12,7 +12,7 @@
     top: 0;
     right: 0;
     bottom: 0;
-    z-index: 999;
+    z-index: var(--zIndex);
     overflow: hidden;
 
     &__container {
@@ -30,29 +30,29 @@
         transform: translateY(100%);
         @extend .half-safe-area-bottom;
 
-        .btn {
+        .half-popup-btn {
             position: absolute;
             padding: 18rpx;
             font-size: 34rpx;
             line-height: 1;
-            color: red;
+            color: inherit;
         }
-        .fullscreen-btn {
+        .half-popup-fullscreen-btn {
             right: 70rpx;
             top: 0;
-            .fullscreen-icon1 {
+            .__fullscreen-icon1 {
                 @extend .half-iconfont;
                 @extend .icon-fangda1;
             }
-            .fullscreen-icon2 {
+            .__fullscreen-icon2 {
                 @extend .half-iconfont;
                 @extend .icon-suoxiao;
             }
         }
-        .close-btn {
+        .half-popup-close-btn {
             right: 0;
             top: 0;
-            .close-icon {
+            .__close-icon {
                 @extend .half-iconfont;
                 @extend .icon-guanbi;
             }
