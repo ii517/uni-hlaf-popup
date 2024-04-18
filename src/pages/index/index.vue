@@ -5,7 +5,7 @@
       <button class="title" @click="show = !show">{{ show }}</button>
     </view>
 
-      <half-popup v-model="show" @close="close">
+      <half-popup v-model="show" color="red" radius="20" @close="close">
           <scroll-view
               :scroll-y="true"
               style="height: 100%"

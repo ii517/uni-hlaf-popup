@@ -28,10 +28,12 @@ defineOptions({ name: 'HalfPopup' })
         v-if="visiblePopup"
         class="half-popup"
         :style="{
-            '--zIndex': props.zIndex
+            '--zIndex': props.zIndex,
+            '--color': props.color
         }"
         @close="onClickClose"
         @tap.stop="onOverlayClose"
+        @touchmove.stop.prevent
     >
         <!-- 弹出内容 -->
         <view
@@ -43,13 +45,13 @@ defineOptions({ name: 'HalfPopup' })
             :change:prop="wxs.observePropChanges"
             :prop="wxsPropsType"
             @tap.stop
-            @touchstart="wxs.handleTouchstart"
+            @touchstart.passive="wxs.handleTouchstart"
             <!-- #ifdef MP-WEIXIN -->
             :catchtouchmove="wxs.handleTouchmove"
             <!-- #endif -->
             <!-- #ifndef MP-WEIXIN -->
             @onClickClose="onClickClose"
-            @touchmove="wxs.handleTouchmove"
+            @touchmove.passive="wxs.handleTouchmove"
             <!-- #endif -->
             @touchend="wxs.handleTouchend"
             @touchcancel="wxs.handleTouchend"

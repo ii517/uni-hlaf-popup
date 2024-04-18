@@ -1,4 +1,4 @@
-import {onUnmounted, ref, type Ref, watch} from 'vue'
+import { ref, type Ref, watch} from 'vue'
 import type {HalfPopupEmits, HalfPopupProps} from '../half-popup'
 
 export const usePopup = (props: HalfPopupProps, emits: HalfPopupEmits) => {
@@ -7,7 +7,6 @@ export const usePopup = (props: HalfPopupProps, emits: HalfPopupEmits) => {
     const wxsPropsType: Ref<string> = ref('')
     const isFullScreen: Ref<boolean> = ref(false)
     const popupHeight: Ref<string> = ref(<string>props.height)
-    const systemInfo: UniApp.GetSystemInfoResult    = uni.getSystemInfoSync()
 
     /**
      * @description 更新弹窗状态
@@ -40,6 +39,8 @@ export const usePopup = (props: HalfPopupProps, emits: HalfPopupEmits) => {
      * @description 放大/回弹默认高度
      */
     const onFullScreen = () => {
+        const systemInfo: UniApp.GetSystemInfoResult    = uni.getSystemInfoSync()
+
         if (isFullScreen.value) {
             // 目前是全屏状态，恢复到默认高度
             popupHeight.value = <string>props.height

@@ -1,5 +1,5 @@
 import type { ExtractPropTypes } from 'vue'
-import { makeNumberProp, makeNumericProp, truthProp } from '../../utils'
+import { makeNumberProp, makeNumericProp, makeStringProp, truthProp } from '../../utils'
 
 export const halfPopupProps = {
     /**
@@ -41,11 +41,16 @@ export const halfPopupProps = {
      * @description 层级
      * @type { Boolean }
      */
-    zIndex: makeNumberProp(9999)
+    zIndex: makeNumberProp(9999),
+    /**
+     * @description 图标颜色
+     * @type { Boolean }
+     */
+    color: makeStringProp('')
 }
 
 export const halfPopupEmits = {
-    'update:modelValue': (value: boolean) => value,
+    'update:modelValue': (value: boolean) => typeof value === 'boolean',
     'open': () => true,
     'close': () => true
 }

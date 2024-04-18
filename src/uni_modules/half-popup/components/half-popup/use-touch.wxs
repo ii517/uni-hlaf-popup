@@ -29,9 +29,6 @@ function handleTouchstart(e, ownerInstance) {
 
 // 处理touchmove事件的函数
 function handleTouchmove(e, ownerInstance) {
-    if (e.preventDefault) {
-        e.preventDefault();
-    }
     var currentInstance = getInstance(ownerInstance);
     var touch = extractTouchFromEvent(e);
     var distance = touch.clientY - initialTouchPositionY;
