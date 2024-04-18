@@ -20,7 +20,6 @@ const {
 } = usePopup(props, emits)
 
 defineExpose({ onClickClose })
-defineOptions({ name: 'HalfPopup' })
 </script>
 
 <template>

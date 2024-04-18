@@ -1,8 +1,8 @@
 {
   "id": "half-popup",
   "displayName": "half-popup",
-  "version": "1.0.0",
-  "description": "half-popup",
+  "version": "0.0.1",
+  "description": "一个wxs高性能的滑动弹窗",
   "keywords": [
     "half-popup",
     "滑动弹窗",
@@ -12,7 +12,7 @@
 ],
   "repository": "https://github.com/ii517/uni-hlaf-popup",
   "engines": {
-    "HBuilderX": "^3.1.0"
+    "HBuilderX": "^3.6.12"
   },
   "dcloudext": {
     "type": "component-vue",
@@ -28,9 +28,9 @@
       "qq": ""
     },
     "declaration": {
-      "ads": "",
-      "data": "",
-      "permissions": ""
+      "ads": "无",
+      "data": "插件不采集任何数据",
+      "permissions": "无"
     },
     "npmurl": ""
   },
@@ -68,14 +68,14 @@
         },
         "小程序": {
           "微信": "y",
-          "阿里": "n",
-          "百度": "n",
-          "字节跳动": "n",
-          "QQ": "n",
-          "钉钉": "n",
-          "快手": "n",
-          "飞书": "n",
-          "京东": "n"
+          "阿里": "u",
+          "百度": "u",
+          "字节跳动": "u",
+          "QQ": "u",
+          "钉钉": "u",
+          "快手": "u",
+          "飞书": "u",
+          "京东": "u"
         },
         "快应用": {
           "华为": "n",

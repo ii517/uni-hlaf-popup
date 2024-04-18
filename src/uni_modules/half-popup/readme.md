@@ -8,6 +8,9 @@
 * 可扩展全屏弹窗
 * 易于定制，提供基础的弹窗配置
 
+## 演示效果
+![](https://github.com/ii517/uni-hlaf-popup/blob/main/src/static/e.gif?raw=true)
+
 ## 安装
 您可以在uni-app插件市场通过uni_modules的形式进行安装，此安装方式可以方便您后续在uni_modules进行一键升级
 
